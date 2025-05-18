@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Maze Solver</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Maze Solver</h1>
+
+    <div class="controls controls-top">
+      <div class="generation-box">
+        <label class="bold-label">Maze generation</label>
+        <div class="custom-dropdown">
+          <div class="dropdown-selected" onclick="toggleDropdown()">Select the algorithm</div>
+          <div class="dropdown-options">
+            <div onclick="selectGeneration('dfs', 'DFS (Backtracker)')">DFS (Backtracker)</div>
+            <div onclick="selectGeneration('prim', 'Prim\'s Algorithm')">Prim's Algorithm</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="generate-btn" onclick="generateMaze()">Generate Maze</button>
+
+      <div class="generation-box-2">
+        <label class="bold-label">Maze solving</label>
+        <div class="custom-dropdown">
+          <div class="dropdown-selected-2" onclick="toggleSolveDropdown()">Select the algorithm</div>
+          <div class="dropdown-options" id="solve-options">
+            <div onclick="selectSolving('bfs', 'BFS')">BFS</div>
+            <div onclick="selectSolving('astar', 'A*')">A*</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="maze" width="500" height="500"></canvas>
+
+    <div class="controls controls-bottom">
+      <button class="play-btn" onclick="solve()">▶️ Play</button>
+      <button class="reset-btn" onclick="resetMaze()">🔄 Reset</button>
+    </div>
+  </div>
+
+  <script src="maze.js"></script>
+</body>
+</html>
