@@ -234,6 +234,36 @@ function bfs(start, end) {
   return null;
 }
 
+function dfs(start, end) {
+  let stack = [start];
+  let visited = new Set([start]);
+  let parent = new Map();
+
+  while (stack.length > 0) {
+    let current = stack.pop();
+    if (current === end) {
+      let path = [];
+      while (current !== start) {
+        path.push(current);
+        current = parent.get(current);
+      }
+      path.push(start);
+      path.reverse();
+      return path;
+    }
+
+    for (let neighbor of getValidNeighbors(current)) {
+      if (!visited.has(neighbor)) {
+        visited.add(neighbor);
+        parent.set(neighbor, current);
+        stack.push(neighbor);
+      }
+    }
+  }
+
+  return null;
+}
+
 function aStar(start, end) {
   let openSet = [start];
   let cameFrom = new Map();
@@ -287,25 +317,136 @@ function solve() {
   visitedPath.clear();
   previewPathSet.clear();
 
+  let visitedOrder = []; // qelizat qe eksplorohen me radhe
   const algo = selectedSolving;
   lastAlgorithmUsed = algo;
 
-  if (algo === "astar") {
-    path = aStar(startCell, endCell);
-  } else {
-    path = bfs(startCell, endCell);
+  function bfsWithOrder(start, end) {
+    let queue = [start];
+    let visited = new Set([start]);
+    let parent = new Map();
+    visitedOrder.push(start);
+
+    while (queue.length > 0) {
+      let current = queue.shift();
+      if (current === end) break;
+
+      for (let neighbor of getValidNeighbors(current)) {
+        if (!visited.has(neighbor)) {
+          visited.add(neighbor);
+          visitedOrder.push(neighbor);
+          parent.set(neighbor, current);
+          queue.push(neighbor);
+        }
+      }
+    }
+
+    let path = [];
+    if (parent.has(end)) {
+      let current = end;
+      while (current !== start) {
+        path.push(current);
+        current = parent.get(current);
+      }
+      path.push(start);
+      path.reverse();
+    }
+    return path;
   }
 
-  if (path) {
-    path.forEach(cell => previewPathSet.add(cell));
-    draw();
+  function dfsWithOrder(start, end) {
+    let stack = [start];
+    let visited = new Set([start]);
+    let parent = new Map();
+    visitedOrder.push(start);
 
-    setTimeout(() => {
-      previewPathSet.clear();
-      animatePath();
-    }, 1000);
+    while (stack.length > 0) {
+      let current = stack.pop();
+      if (current === end) break;
+
+      for (let neighbor of getValidNeighbors(current)) {
+        if (!visited.has(neighbor)) {
+          visited.add(neighbor);
+          visitedOrder.push(neighbor);
+          parent.set(neighbor, current);
+          stack.push(neighbor);
+        }
+      }
+    }
+
+    let path = [];
+    if (parent.has(end)) {
+      let current = end;
+      while (current !== start) {
+        path.push(current);
+        current = parent.get(current);
+      }
+      path.push(start);
+      path.reverse();
+    }
+    return path;
+  }
+
+  function aStarWithOrder(start, end) {
+    let openSet = [start];
+    let cameFrom = new Map();
+    let gScore = new Map(grid.map(c => [c, Infinity]));
+    let fScore = new Map(grid.map(c => [c, Infinity]));
+    let visited = new Set();
+    gScore.set(start, 0);
+    fScore.set(start, heuristic(start, end));
+    visitedOrder.push(start);
+
+    while (openSet.length > 0) {
+      openSet.sort((a, b) => fScore.get(a) - fScore.get(b));
+      let current = openSet.shift();
+
+      if (current === end) break;
+
+      visited.add(current);
+
+      for (let neighbor of getValidNeighbors(current)) {
+        if (visited.has(neighbor)) continue;
+        visitedOrder.push(neighbor);
+
+        let tentativeG = gScore.get(current) + 1;
+        if (tentativeG < gScore.get(neighbor)) {
+          cameFrom.set(neighbor, current);
+          gScore.set(neighbor, tentativeG);
+          fScore.set(neighbor, tentativeG + heuristic(neighbor, end));
+          if (!openSet.includes(neighbor)) openSet.push(neighbor);
+        }
+      }
+    }
+
+    let path = [];
+    if (cameFrom.has(end)) {
+      let current = end;
+      while (current !== start) {
+        path.push(current);
+        current = cameFrom.get(current);
+      }
+      path.push(start);
+      path.reverse();
+    }
+    return path;
+  }
+
+  if (algo === "astar") {
+    path = aStarWithOrder(startCell, endCell);
+  } else if (algo === "dfs") {
+    path = dfsWithOrder(startCell, endCell);
+  } else {
+    path = bfsWithOrder(startCell, endCell);
+  }
+
+  if (path && path.length > 0) {
+    animateExploration(visitedOrder, path);
   }
 }
+
+
+
 
 function animatePath() {
   if (!path || path.length === 0 || animating) return;
@@ -345,18 +486,28 @@ function draw() {
     let x = cell.j * w;
     let y = cell.i * h;
 
+    // 1. Rruga perfundimtare (mbivendoset siper)
     if (previewPathSet.has(cell)) {
-      ctx.fillStyle = "#CCCCCC";
-      ctx.fillRect(x, y, w, h);
-    } else if (visitedPath.has(cell)) {
       ctx.fillStyle =
-        lastAlgorithmUsed === "astar" ? "#f8dea6" : "#88bedb";
+        lastAlgorithmUsed === "astar"
+          ? "#f8dea6"   // portokallt per A*
+          : lastAlgorithmUsed === "dfs"
+          ? "#d8e5c2"   // e gjelber per DFS
+          : "#88bedb";  // blu per BFS
       ctx.fillRect(x, y, w, h);
+
+    // 2. Qelizat e vizituara gjate eksplorimit (ngjyre gri)
+    } else if (visitedPath.has(cell)) {
+      ctx.fillStyle = "#f7e6c8";//#e9decc  #f1e9da
+      ctx.fillRect(x, y, w, h);
+
+    // 3. Qelizat e gjeneruara ne labirint
     } else if (cell.visited) {
       ctx.fillStyle = "#faf1e4";
       ctx.fillRect(x, y, w, h);
     }
 
+    // 4. Vizato muret
     ctx.strokeStyle = "black";
     ctx.lineWidth = 0.4;
     if (cell.walls[0]) {
@@ -385,6 +536,7 @@ function draw() {
     }
   }
 
+  // 5. Vizato qenin (starti)
   if (startCell) {
     let x = startCell.j * w;
     let y = startCell.i * h;
@@ -394,6 +546,7 @@ function draw() {
     ctx.fillText("🐶", x + w / 2, y + h / 2);
   }
 
+  // 6. Vizato shtepine (fundi)
   if (endCell) {
     let x = endCell.j * w;
     let y = endCell.i * h;
@@ -465,3 +618,30 @@ document.addEventListener("click", function (event) {
     solveDropdown.classList.remove("show");
   }
 });
+
+
+function animateExploration(order, finalPath) {
+  let i = 0;
+  animating = true;
+
+  let interval = setInterval(() => {
+    if (i < order.length) {
+      visitedPath.add(order[i]); // gri – vizitimi
+      draw();
+      i++;
+    } else {
+      clearInterval(interval);
+
+      // rruga me ngjyren perkatese per algoritmin
+      finalPath.forEach(cell => previewPathSet.add(cell));
+      draw();
+
+      setTimeout(() => {
+        previewPathSet.clear();
+        animatePath(); // qeni ndjek rrugen
+      }, 600);
+    }
+  }, 30); // kontrollo shpejtesine
+}
+
+
