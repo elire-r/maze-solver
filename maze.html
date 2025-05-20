@@ -81,10 +81,12 @@
     <div id="bfsModal" class="modal">
       <div class="modal-content modal-bfs">
         <span class="close" id="closeBfsModal">&times;</span>
-        <h2>Çka është algoritmi BFS(Breadth-First Search)?</h2>
+        <h2>Algoritmi BFS(Breadth-First Search)?</h2>
         <p style="text-align: left;">
-          Algoritmi <strong>BFS</strong> (Breadth-First Search) është një algoritëm eksplorimi i grafit që përdor një radhë (queue) për të vizituar qelizat më të afërta tërthorazi (në të njëjtën distancë) para se të shkojë më thellë.<br><br>
-          Ai garanton gjetjen e rrugës më të shkurtër nëse të gjitha lëvizjet kanë të njëjtin çmim (p.sh., një hap në çdo drejtim).
+          <strong>BFS (Kërkimi në gjerësi)</strong> është një algoritëm që eksploron labirintin duke filluar nga qeliza e parë dhe duke u zgjeruar në të gjitha drejtimet njëkohësisht, sikur të krijonte një valë që përhapet.<br><br>
+          Ai përdor një radhë (queue) për të ruajtur qelizat që duhet të eksplorohen, dhe gjithmonë zgjedh qelizën më afër fillimit për ta eksploruar më tej.<br><br>
+          <strong>Avantazhi kryesor:</strong> garanton gjithmonë rrugën më të shkurtër deri në qëllim – nëse të gjitha hapat kanë të njëjtin çmim.<br><br>
+          <strong>Kur ta përdorësh:</strong> Kur dëshiron zgjidhjen më të shkurtër dhe nuk të intereson sa shpejt e gjen rrugën.
         </p>
       </div>
     </div>
@@ -95,8 +97,11 @@
         <span class="close" id="closeDfsModal">&times;</span>
         <h2>Algoritmi DFS(Depth-First Search)</h2>
         <p style="text-align: left;">
-          DFS (Depth-First Search) është një algoritëm eksplorimi që përdor një strukturë pirg (stack) për të lëvizur sa më thellë të jetë e mundur në një drejtim përpara se të kthehet mbrapa. <br><br>
-          Ai është i thjeshtë për t’u zbatuar dhe shumë efikas në eksplorime ku thellësia e rrugëve është më e rëndësishme sesa gjetja e rrugës më të shkurtër. Megjithatë, ndryshe nga BFS, DFS nuk garanton gjetjen e rrugës më të shkurtër.
+          <strong>DFS (Kërkimi në thellësi)</strong> eksploron sa më thellë në një drejtim para se të kthehet pas për të provuar drejtime të tjera. Është si dikush që futet në një tunel pa kthim derisa has mur, pastaj kthehet dhe provon tunelin tjetër.<br><br>
+          Përdor një pirg (stack) për te lëvizur sa më thellë të jetë e mundur në një drejtim përpara se të kthehet mbrapa. <br><br>
+          <strong>Avantazhi kryesor:</strong> është shumë i thjeshtë dhe i shpejtë për implementim. <br><br>
+          <strong>Kufizimi:</strong> ndryshe nga BFS, DFS nuk garanton gjetjen e rrugës më të shkurtër, sepse mund të zgjedhë një rrugë të gjatë ose të komplikuar. <br><br>
+          <strong>Kur ta përdorësh:</strong> Kur shpejtësia është më e rëndësishme se rruga më e mirë, ose kur eksplorimi i thellë ka më shumë vlerë. 
         </p>
       </div>
     </div>
@@ -105,11 +110,15 @@
     <div id="astarModal" class="modal">
       <div class="modal-content modal-astar">
         <span class="close" id="closeAstarModal">&times;</span>
-        <h2>Algoritmi A*</h2>
+        <h2>Algoritmi A*(A-star)</h2>
         <p style="text-align: left;">
-          A* (A-Star) është një algoritëm shumë i fuqishëm për gjetjen e rrugës më të mirë nga pika A në pikën B duke përdorur një funksion heuristik. <br><br>
-          Ai kombinon koston e rrugës nga fillimi deri në një qelizë (G) dhe një vlerësim të distancës nga ajo qelizë deri në qëllim (H), duke përdorur formulën: <strong>F = G + H</strong>. <br><br>
-          A* është i shpejtë, i zgjuar dhe zakonisht më efikas sesa BFS apo DFS në skenarë ku rruga optimale është e rëndësishme.
+          <strong>A*</strong> është një nga algoritmet më të zgjuar për gjetjen e rrugës më të mirë nga pika A në pikën B duke përdorur një funksion heuristik.<br><br>
+          Përdor formulën <strong>F = G + H</strong>, ku:<br>
+          <strong>• G –</strong> është distanca e përshkuar deri te qeliza aktuale<br>
+          <strong>• H –</strong> është një vlerësim (heuristikë) i distancës së mbetur deri në qëllim.<br><br>
+          <strong>Avantazhi kryesor:</strong> është më efektiv sesa <strong>BFS</strong> apo <strong>DFS</strong>, ku gjetja e rrugës më të shkurtër dhe më optimale ka rëndësi të madhe.<br><br>
+          <strong>Kur ta përdorësh:</strong> Kur dëshiron efikasitet të lartë dhe rrugën më optimale drejt qëllimit.
+</p>
         </p>
       </div>
     </div>
