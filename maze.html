@@ -7,42 +7,148 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="title">Maze Solver</h1>
+    <!-- === PJESA MAZE + BUTONA === -->
+    <div id="mainContent">
+      <h1 class="title">Maze Solver</h1>
 
-    <div class="controls controls-top">
-      <div class="generation-box">
-        <label class="bold-label">Maze generation</label>
-        <div class="custom-dropdown">
-          <div class="dropdown-selected" onclick="toggleDropdown()">Select the algorithm</div>
-          <div class="dropdown-options">
-            <div onclick="selectGeneration('dfs', 'DFS (Backtracker)')">DFS (Backtracker)</div>
-            <div onclick="selectGeneration('prim', 'Prim\'s Algorithm')">Prim's Algorithm</div>
+      <div class="controls controls-top">
+        <div class="generation-box">
+          <label class="bold-label">Maze generation</label>
+          <div class="custom-dropdown">
+            <div class="dropdown-selected" onclick="toggleDropdown()">Select the algorithm</div>
+            <div class="dropdown-options">
+              <div onclick="selectGeneration('dfs', 'DFS (Backtracker)')">DFS (Backtracker)</div>
+              <div onclick="selectGeneration('prim', 'Prim\'s Algorithm')">Prim's Algorithm</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="generate-btn" onclick="generateMaze()">Generate Maze</button>
+
+        <div class="generation-box-2">
+          <label class="bold-label">Maze solving</label>
+          <div class="custom-dropdown">
+            <div class="dropdown-selected-2" onclick="toggleSolveDropdown()">Select the algorithm</div>
+            <div class="dropdown-options" id="solve-options">
+              <div onclick="selectSolving('bfs', 'BFS')">BFS</div>
+              <div onclick="selectSolving('dfs', 'DFS')">DFS</div>
+              <div onclick="selectSolving('astar', 'A*')">A*</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <button class="generate-btn" onclick="generateMaze()">Generate Maze</button>
+      <canvas id="maze" width="500" height="500"></canvas>
 
-      <div class="generation-box-2">
-        <label class="bold-label">Maze solving</label>
-        <div class="custom-dropdown">
-          <div class="dropdown-selected-2" onclick="toggleSolveDropdown()">Select the algorithm</div>
-          <div class="dropdown-options" id="solve-options">
-            <div onclick="selectSolving('bfs', 'BFS')">BFS</div>
-            <div onclick="selectSolving('astar', 'A*')">A*</div>
-          </div>
-        </div>
+      <div class="controls controls-bottom">
+        <button class="play-btn" onclick="solve()">▶️ Play</button>
+        <button class="reset-btn" onclick="resetMaze()">🔄 Reset</button>
+        <button class="info-btn" id="infoButton">ℹ️ Info</button>
       </div>
     </div>
 
-    <canvas id="maze" width="500" height="500"></canvas>
+    <!-- === PJESA INFO (MODAL) === -->
+    <div id="infoSection">
+      <span id="infoClose">&times;</span>
+      <h2 style="color: black;">Rreth aplikacionit</h2>
+      <p>
+        Ky aplikacion lejon përdoruesin të krijojë dhe zgjidhë labirinte duke përdorur algoritme si BFS(Breadth-First Search), DFS(Depth-First Search) dhe A*(A-star).<br>
+        Qëllimi është të demonstrohet mënyra se si këto algoritme eksplorojnë hapësirën për të gjetur rrugën më të shkurtër në një mënyrë vizuale dhe ndërvepruese.
+      </p>
 
-    <div class="controls controls-bottom">
-      <button class="play-btn" onclick="solve()">▶️ Play</button>
-      <button class="reset-btn" onclick="resetMaze()">🔄 Reset</button>
+      <h3 style="margin-top: 10px; font-size: 15px; color: black; ">
+         Si luhet loja:
+      </h3>
+
+      <p style="text-align: left; max-width: 400px; margin-top: -6px;">
+        1. Së pari, zgjedh një algoritëm për gjenerimin e labirintit nga menuja <strong style="color: #85a96b;">Maze generation</strong>.<br>
+        2. Pastaj, klikon butonin <strong style="color:#5ca3c8;">Generate Maze</strong> për ta ndërtuar labirintin në mënyrë automatike.<br>
+        3. Pasi të krijohet labirinti, klikon në një qelizë për të vendosur pozicionin e fillimit (🐶), pastaj klikon në një qelizë tjetër për të vendosur pozicionin e qëllimit (🏠).<br>
+        4. Zgjedh një algoritëm për zgjidhjen e labirintit nga menuja <strong style="color: #dec184;">Maze solving</strong>.<br>
+        5. Në fund, klikon butonin <strong style="color:#5ca3c8;">▶️ Play</strong> që qeni të fillojë rrugëtimin për të gjetur shtëpinë, bazuar në algoritmin e zgjedhur.<br>
+        6. Mund të klikosh <strong style="color: #dec184;">🔄 Reset</strong> për ta filluar lojën nga e para në çdo moment.
+      </p>
+
+      <p style="margin-top: 40px;">
+        Dëshiron të mësosh më shumë për algoritmet? Kliko në emrin e algoritmeve: 
+        <span id="openBfsModal" class="algo-link bfs-link">BFS</span>, 
+        <span id="openDfsModal" class="algo-link dfs-link">DFS</span> apo
+        <span id="openAstarModal" class="algo-link astar-link">A*</span>.
+      </p>
+    </div>
+
+    <!-- === MODAL BFS === -->
+    <div id="bfsModal" class="modal">
+      <div class="modal-content modal-bfs">
+        <span class="close" id="closeBfsModal">&times;</span>
+        <h2>Çka është algoritmi BFS(Breadth-First Search)?</h2>
+        <p style="text-align: left;">
+          Algoritmi <strong>BFS</strong> (Breadth-First Search) është një algoritëm eksplorimi i grafit që përdor një radhë (queue) për të vizituar qelizat më të afërta tërthorazi (në të njëjtën distancë) para se të shkojë më thellë.<br><br>
+          Ai garanton gjetjen e rrugës më të shkurtër nëse të gjitha lëvizjet kanë të njëjtin çmim (p.sh., një hap në çdo drejtim).
+        </p>
+      </div>
+    </div>
+
+    <!-- === MODAL DFS === -->
+    <div id="dfsModal" class="modal">
+      <div class="modal-content modal-dfs">
+        <span class="close" id="closeDfsModal">&times;</span>
+        <h2>Algoritmi DFS(Depth-First Search)</h2>
+        <p style="text-align: left;">
+          DFS (Depth-First Search) është një algoritëm eksplorimi që përdor një strukturë pirg (stack) për të lëvizur sa më thellë të jetë e mundur në një drejtim përpara se të kthehet mbrapa. <br><br>
+          Ai është i thjeshtë për t’u zbatuar dhe shumë efikas në eksplorime ku thellësia e rrugëve është më e rëndësishme sesa gjetja e rrugës më të shkurtër. Megjithatë, ndryshe nga BFS, DFS nuk garanton gjetjen e rrugës më të shkurtër.
+        </p>
+      </div>
+    </div>
+
+    <!-- === MODAL A* === -->
+    <div id="astarModal" class="modal">
+      <div class="modal-content modal-astar">
+        <span class="close" id="closeAstarModal">&times;</span>
+        <h2>Algoritmi A*</h2>
+        <p style="text-align: left;">
+          A* (A-Star) është një algoritëm shumë i fuqishëm për gjetjen e rrugës më të mirë nga pika A në pikën B duke përdorur një funksion heuristik. <br><br>
+          Ai kombinon koston e rrugës nga fillimi deri në një qelizë (G) dhe një vlerësim të distancës nga ajo qelizë deri në qëllim (H), duke përdorur formulën: <strong>F = G + H</strong>. <br><br>
+          A* është i shpejtë, i zgjuar dhe zakonisht më efikas sesa BFS apo DFS në skenarë ku rruga optimale është e rëndësishme.
+        </p>
+      </div>
     </div>
   </div>
 
   <script src="maze.js"></script>
+  <script>
+    const mainContent = document.getElementById("mainContent");
+    const infoSection = document.getElementById("infoSection");
+    const infoBtn = document.getElementById("infoButton");
+    const infoClose = document.getElementById("infoClose");
+
+    infoBtn.onclick = function () {
+      mainContent.style.display = "none";
+      infoSection.style.display = "flex";
+    };
+
+    infoClose.onclick = function () {
+      infoSection.style.display = "none";
+      mainContent.style.display = "block";
+    };
+
+    const bfsModal = document.getElementById("bfsModal");
+    document.getElementById("openBfsModal").onclick = () => bfsModal.style.display = "flex";
+    document.getElementById("closeBfsModal").onclick = () => bfsModal.style.display = "none";
+
+    const dfsModal = document.getElementById("dfsModal");
+    document.getElementById("openDfsModal").onclick = () => dfsModal.style.display = "flex";
+    document.getElementById("closeDfsModal").onclick = () => dfsModal.style.display = "none";
+
+    const astarModal = document.getElementById("astarModal");
+    document.getElementById("openAstarModal").onclick = () => astarModal.style.display = "flex";
+    document.getElementById("closeAstarModal").onclick = () => astarModal.style.display = "none";
+
+    window.onclick = function (event) {
+      if (event.target === bfsModal) bfsModal.style.display = "none";
+      if (event.target === dfsModal) dfsModal.style.display = "none";
+      if (event.target === astarModal) astarModal.style.display = "none";
+    };
+  </script>
 </body>
 </html>
