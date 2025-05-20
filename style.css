@@ -1,4 +1,4 @@
-/* === LAYOUT BAZË === */
+/* === LAYOUT BAZE === */
 body {
   display: flex;
   flex-direction: column;
@@ -10,13 +10,14 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;
   height: 100vh;
+  overflow: hidden; 
 }
 
 .title {
   margin-top: 0;
   margin-bottom: 16px;
   font-size: 22px;
-  color: #333;
+  color: black;
   text-align: center;
   align-self: center;
 }
@@ -32,6 +33,7 @@ body {
   width: 560px;
   margin: 0;
 }
+
 
 .controls {
   display: flex;
@@ -57,7 +59,12 @@ body {
 .controls-bottom {
   margin-top: 18px;
   margin-bottom: 0;
+  display: flex;
+  justify-content: center;
+  gap: 25px; 
 }
+
+
 
 button:hover {
   background-color: #f0f0f0;
@@ -65,7 +72,7 @@ button:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Vetëm këta butona bëhen më të vegjël */
+/* Vetem keta butona behen me te vegjel */
 button[onclick="generateMaze()"],
 button[onclick="solve()"] {
   background-color: #88bedb;;
@@ -163,7 +170,7 @@ canvas {
   display: block;
 }
 
-/* === BOX E GJELBËR PËR ZGJEDHJE ALGORITMASH === */
+/* === BOX E GJELBER PER ZGJEDHJE ALGORITMESH === */
 .generation-box {
   background-color: #d8e5c2;
   border: 2px solid #a3c28d;
@@ -174,7 +181,6 @@ canvas {
   align-items: center;
   gap: 6px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  /* font-size: 13px; */
 }
 
 .generation-box-2 {
@@ -187,10 +193,9 @@ canvas {
   align-items: center;
   gap: 6px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  /* font-size: 13px; */
 }
 
-/* === BUTONA TË VOGËL SPECIFIK PËR GENERATE MAZE === */
+/* === BUTONA TE VOGEL SPECIFIK PER GENERATE MAZE === */
 .generate-btn {
   background-color: #95c8e4;
   border: 2px solid #6a9ab3 !important;
@@ -209,7 +214,7 @@ canvas {
   transform: scale(1.05);
 }
 
-/* Butonat Play dhe Reset mbeten siç janë pa ndryshime. */
+/* Butonat Play dhe Reset mbeten siq jane pa ndryshime. */
 .controls-bottom button {
   font-size: 11px;
   padding: 6px 12px;
@@ -225,7 +230,7 @@ canvas {
 }
 
 .generation-box:hover {
-  background-color: #cfe0b7;
+  background-color: #c9dcaf;
   transform: scale(1.05);
   transition: all 0.2s ease-in-out;
   cursor: pointer;
@@ -236,4 +241,184 @@ canvas {
   transform: scale(1.05);
   transition: all 0.2s ease-in-out;
   cursor: pointer;
+}
+
+
+
+
+/* MODALI UNIVERSAL (Info + BFS, DFS, A*) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(0.6px); /* efekti blur */
+  -webkit-backdrop-filter: blur(0.6px); /* per Safari */
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Permbajtja brenda qdo modali */
+.modal-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  width: 60%;
+  max-width: 600px;
+  position: relative;
+  text-align: center;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Butoni per mbyllje (X) */
+.modal .close {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  font-size: 28px;
+  color: #888;
+  cursor: pointer;
+}
+
+.modal .close:hover {
+  color: red;
+}
+
+/* Butoni Info */
+.info-btn {
+  padding: 10px 18px;
+  font-size: 16px;
+  background-color: #d8e5c2;
+  border: 2px solid #a3c28d;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.info-btn:hover {
+    background-color: #c9dcaf;
+}
+
+/* Lidhjet klikueshme per BFS, DFS, A* ne tekst */
+.algo-link {
+  color: #2563eb;
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.algo-link:hover {
+  color: #1d4ed8;
+}
+
+/* Animacion i thjeshte kur hapet modal */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+
+.algo-link {
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.algo-link:hover {
+  color: #1d4ed8;
+}
+
+
+
+#infoSection {
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  width: auto;
+  box-shadow: none;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  margin: 0;
+  max-width: 500px;
+}
+
+
+#infoSection h2 {
+  margin-bottom: 10px;
+  font-size: 24px;
+  margin-top: 20px;
+}
+
+#infoClose {
+  align-self: flex-end;
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.algo-link {
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.algo-link:hover {
+  color: #1d4ed8;
+}
+
+#infoSection h2 {
+  margin-top: 0; /* elimino hapesiren lart titullit */
+  margin-bottom: 10px;
+  font-size: px;
+}
+
+
+/*pjesa e modalit qe bfs dfs edhe a* me u kon ne fund me ngjyra */
+.bfs-link {
+  color: #5ca3c8;
+}
+
+.bfs-link:hover {
+  color: #88bedb;
+}
+
+.dfs-link {
+  color: #85a96b;
+}
+
+.dfs-link:hover {
+  color: #9dbf7f;
+}
+
+.astar-link {
+  color: #dec184;
+}
+
+.astar-link:hover {
+  color: #e3d2ad;
+}
+
+/*pjesa e modaleve me ngjyra */
+.modal-bfs {
+  background-color: #fdf5e6; /* blu e lehte, perafersisht #88bedb */
+}
+
+.modal-dfs {
+  background-color: #e8f3e3; /* gjelbert e lehte, perafersisht #d8e5c2 */
+}
+
+.modal-astar {
+  background-color: #fdf5e6; /* portokalli e lehte, perafersisht #f8dea6 */
 }
