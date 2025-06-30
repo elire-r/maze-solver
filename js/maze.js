@@ -96,215 +96,7 @@ function generateMaze() {
   else generatePrim();
 }
 
-function generateDFS() {
-  let current = grid[0];
-  let stack = [];
-  current.visited = true;
-  stack.push(current);
 
-  let interval = setInterval(() => {
-    let next = current.getUnvisitedNeighbors().sort(() => Math.random() - 0.5)[0];
-    if (next) {
-      next.visited = true;
-      stack.push(current);
-      removeWalls(current, next);
-      current = next;
-    } else if (stack.length > 0) {
-      current = stack.pop();
-    } else {
-      clearInterval(interval);
-      draw();
-    }
-    draw();
-  }, 10);
-}
-
-function generatePrim() {
-  let frontier = [];
-  let current = grid[0];
-  current.visited = true;
-
-  function addFrontier(cell) {
-    for (let neighbor of getUnvisitedNeighbors(cell)) {
-      if (!frontier.includes(neighbor)) frontier.push(neighbor);
-    }
-  }
-
-  function getUnvisitedNeighbors(cell) {
-    let neighbors = [];
-    const i = cell.i;
-    const j = cell.j;
-    const top = grid[index(i - 1, j)];
-    const right = grid[index(i, j + 1)];
-    const bottom = grid[index(i + 1, j)];
-    const left = grid[index(i, j - 1)];
-
-    if (top && !top.visited) neighbors.push(top);
-    if (right && !right.visited) neighbors.push(right);
-    if (bottom && !bottom.visited) neighbors.push(bottom);
-    if (left && !left.visited) neighbors.push(left);
-
-    return neighbors;
-  }
-
-  function getVisitedNeighbors(cell) {
-    let neighbors = [];
-    const i = cell.i;
-    const j = cell.j;
-    const top = grid[index(i - 1, j)];
-    const right = grid[index(i, j + 1)];
-    const bottom = grid[index(i + 1, j)];
-    const left = grid[index(i, j - 1)];
-
-    if (top && top.visited) neighbors.push(top);
-    if (right && right.visited) neighbors.push(right);
-    if (bottom && bottom.visited) neighbors.push(bottom);
-    if (left && left.visited) neighbors.push(left);
-
-    return neighbors;
-  }
-
-  addFrontier(current);
-
-  let interval = setInterval(() => {
-    if (frontier.length === 0) {
-      clearInterval(interval);
-      draw();
-      return;
-    }
-
-    const randIndex = Math.floor(Math.random() * frontier.length);
-    const cell = frontier.splice(randIndex, 1)[0];
-    const neighbors = getVisitedNeighbors(cell);
-
-    if (neighbors.length > 0) {
-      const neighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-      removeWalls(cell, neighbor);
-    }
-
-    cell.visited = true;
-    addFrontier(cell);
-    draw();
-  }, 10);
-}
-
-function getValidNeighbors(cell) {
-  let neighbors = [];
-  const i = cell.i;
-  const j = cell.j;
-
-  if (!cell.walls[0]) neighbors.push(grid[index(i - 1, j)]);
-  if (!cell.walls[1]) neighbors.push(grid[index(i, j + 1)]);
-  if (!cell.walls[2]) neighbors.push(grid[index(i + 1, j)]);
-  if (!cell.walls[3]) neighbors.push(grid[index(i, j - 1)]);
-
-  return neighbors.filter(n => n);
-}
-
-function heuristic(a, b) {
-  return Math.abs(a.i - b.i) + Math.abs(a.j - b.j);
-}
-
-function bfs(start, end) {
-  let queue = [start];
-  let visited = new Set([start]);
-  let parent = new Map();
-
-  while (queue.length > 0) {
-    let current = queue.shift();
-    if (current === end) {
-      let path = [];
-      while (current !== start) {
-        path.push(current);
-        current = parent.get(current);
-      }
-      path.push(start);
-      path.reverse();
-      return path;
-    }
-
-    for (let neighbor of getValidNeighbors(current)) {
-      if (!visited.has(neighbor)) {
-        visited.add(neighbor);
-        parent.set(neighbor, current);
-        queue.push(neighbor);
-      }
-    }
-  }
-  return null;
-}
-
-function dfs(start, end) {
-  let stack = [start];
-  let visited = new Set([start]);
-  let parent = new Map();
-
-  while (stack.length > 0) {
-    let current = stack.pop();
-    if (current === end) {
-      let path = [];
-      while (current !== start) {
-        path.push(current);
-        current = parent.get(current);
-      }
-      path.push(start);
-      path.reverse();
-      return path;
-    }
-
-    for (let neighbor of getValidNeighbors(current)) {
-      if (!visited.has(neighbor)) {
-        visited.add(neighbor);
-        parent.set(neighbor, current);
-        stack.push(neighbor);
-      }
-    }
-  }
-
-  return null;
-}
-
-function aStar(start, end) {
-  let openSet = [start];
-  let cameFrom = new Map();
-  let gScore = new Map(grid.map(c => [c, Infinity]));
-  let fScore = new Map(grid.map(c => [c, Infinity]));
-  gScore.set(start, 0);
-  fScore.set(start, heuristic(start, end));
-  let visited = new Set();
-
-  while (openSet.length > 0) {
-    openSet.sort((a, b) => fScore.get(a) - fScore.get(b));
-    let current = openSet.shift();
-
-    if (current === end) {
-      let path = [];
-      while (current !== start) {
-        path.push(current);
-        current = cameFrom.get(current);
-      }
-      path.push(start);
-      path.reverse();
-      return path;
-    }
-
-    visited.add(current);
-
-    for (let neighbor of getValidNeighbors(current)) {
-      if (visited.has(neighbor)) continue;
-
-      let tentativeG = gScore.get(current) + 1;
-      if (tentativeG < gScore.get(neighbor)) {
-        cameFrom.set(neighbor, current);
-        gScore.set(neighbor, tentativeG);
-        fScore.set(neighbor, tentativeG + heuristic(neighbor, end));
-        if (!openSet.includes(neighbor)) openSet.push(neighbor);
-      }
-    }
-  }
-
-  return null;
-}
 
 function solve() {
   if (!startCell || !endCell) return;
@@ -479,7 +271,10 @@ function resetMaze() {
 }
 
 function draw() {
-  ctx.fillStyle = "#f7f0df";
+  const isDarkMode = document.body.classList.contains("dark-mode");
+ctx.fillStyle = isDarkMode ? "#3c3c3c" : "#f7f0df";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   for (let cell of grid) {
@@ -487,25 +282,26 @@ function draw() {
     let y = cell.i * h;
 
     // 1. Rruga perfundimtare (mbivendoset siper)
-    if (previewPathSet.has(cell)) {
-      ctx.fillStyle =
-        lastAlgorithmUsed === "astar"
-          ? "#f8dea6"   // portokallt per A*
-          : lastAlgorithmUsed === "dfs"
-          ? "#d8e5c2"   // e gjelber per DFS
-          : "#88bedb";  // blu per BFS
-      ctx.fillRect(x, y, w, h);
+if (previewPathSet.has(cell)) {
+  ctx.fillStyle =
+    lastAlgorithmUsed === "astar"
+      ? (isDarkMode ? "#8c6b3f" : "#f8dea6")
+      : lastAlgorithmUsed === "dfs"
+      ? (isDarkMode ? "#43553d" : "#d8e5c2")
+      : (isDarkMode ? "#3e6c89" : "#88bedb");
+  ctx.fillRect(x, y, w, h);
 
-    // 2. Qelizat e vizituara gjate eksplorimit (ngjyre gri)
-    } else if (visitedPath.has(cell)) {
-      ctx.fillStyle = "#f7e6c8";//#e9decc  #f1e9da
-      ctx.fillRect(x, y, w, h);
+// 2. Qelizat e vizituara gjate eksplorimit (ngjyre gri)
+} else if (visitedPath.has(cell)) {
+  ctx.fillStyle = isDarkMode ? "#3c3c3c" : "#f7e6c8";
+  ctx.fillRect(x, y, w, h);
 
-    // 3. Qelizat e gjeneruara ne labirint
-    } else if (cell.visited) {
-      ctx.fillStyle = "#faf1e4";
-      ctx.fillRect(x, y, w, h);
-    }
+// 3. Qelizat e gjeneruara ne labirint
+} else if (cell.visited) {
+  ctx.fillStyle = isDarkMode ? "#2a2a2a" : "#faf1e4";
+  ctx.fillRect(x, y, w, h);
+}
+
 
     // 4. Vizato muret
     ctx.strokeStyle = "black";
@@ -644,4 +440,20 @@ function animateExploration(order, finalPath) {
   }, 30); // kontrollo shpejtesine
 }
 
+
+
+// === NIGHT MODE FUNCTIONALITY ===
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.getElementById("themeToggle");
+  const text = document.getElementById("modeText");
+
+  toggle.addEventListener("change", () => {
+    const isDark = toggle.checked;
+    document.body.classList.toggle("dark-mode", isDark);
+    text.textContent = isDark ? "Dark mode" : "Light mode";
+
+    // Kjo siguron qe canvas te ridizajnohet me sfond të erret/qarte
+    draw();
+  });
+});
 

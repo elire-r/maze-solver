@@ -15,11 +15,12 @@ body {
 
 .title {
   margin-top: 0;
-  margin-bottom: 16px;
+  margin-bottom: 0.6px;
   font-size: 22px;
-  color: black;
-  text-align: center;
-  align-self: center;
+  color: #3a2f25;
+  text-align: left;         
+  align-self: flex-start;   
+  margin-left: -15px; 
 }
 
 .container {
@@ -57,7 +58,7 @@ body {
 }
 
 .controls-bottom {
-  margin-top: 18px;
+  margin-top: 12px;
   margin-bottom: 0;
   display: flex;
   justify-content: center;
@@ -72,7 +73,7 @@ button:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Vetem keta butona behen me te vegjel */
+
 button[onclick="generateMaze()"],
 button[onclick="solve()"] {
   background-color: #88bedb;;
@@ -89,7 +90,7 @@ button[onclick="solve()"]:hover {
 
 button[onclick="resetMaze()"] {
   background-color: #fbdfa5;
-  color: #333;
+  color: #3a2f25;;
   border: none;
 }
 
@@ -100,6 +101,7 @@ button[onclick="resetMaze()"]:hover {
 /* === DROPDOWN & SELECTS === */
 .bold-label {
   font-weight: 700;
+  color: #3a2f25;
 }
 
 /* === CANVAS === */
@@ -127,6 +129,7 @@ canvas {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   margin-left: 10px;
   margin-right: 10px;
+  color: #3a2f25;
 }
 
 .dropdown-selected-2 {
@@ -139,6 +142,7 @@ canvas {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   margin-left: 10px;
   margin-right: 10px;
+  color: #3a2f25;
 }
 
 .dropdown-options {
@@ -198,7 +202,7 @@ canvas {
 /* === BUTONA TE VOGEL SPECIFIK PER GENERATE MAZE === */
 .generate-btn {
   background-color: #95c8e4;
-  border: 2px solid #6a9ab3 !important;
+  border: 2px solid #618ca2 !important;
   color: rgb(7, 7, 7);
   border-radius: 8px; 
   padding: 3px 25px;
@@ -206,15 +210,16 @@ canvas {
   font-weight: 600;
   margin-top: -4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+  transition: none;
 }
 
 .generate-btn:hover {
   background-color: #6aa3bd;
   transform: scale(1.05);
+  transition: all 0.2s ease-in-out; 
 }
 
-/* Butonat Play dhe Reset mbeten siq jane pa ndryshime. */
+/* Butonat Play dhe Reset mbeten sic jane pa ndryshime. */
 .controls-bottom button {
   font-size: 11px;
   padding: 6px 12px;
@@ -222,7 +227,7 @@ canvas {
 }
 
 .play-btn {
-  border: 2px solid #6a9ab3 !important;
+  border: 2px solid #618ca2 !important;
 }
 
 .reset-btn {
@@ -244,8 +249,6 @@ canvas {
 }
 
 
-
-
 /* MODALI UNIVERSAL (Info + BFS, DFS, A*) */
 .modal {
   display: none;
@@ -256,13 +259,13 @@ canvas {
   width: 100%;
   height: 100%;
   backdrop-filter: blur(0.6px); /* efekti blur */
-  -webkit-backdrop-filter: blur(0.6px); /* per Safari */
+  -webkit-backdrop-filter: blur(0.6px); 
   align-items: center;
   justify-content: center;
 }
 
 
-/* Permbajtja brenda qdo modali */
+/* Permbajtja brenda cdo modali */
 .modal-content {
   background-color: #fff;
   padding: 30px;
@@ -297,7 +300,8 @@ canvas {
   border: 2px solid #a3c28d;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: none;
+  color: #3a2f25;
 }
 
 .info-btn:hover {
@@ -379,7 +383,7 @@ canvas {
 }
 
 #infoSection h2 {
-  margin-top: 0; /* elimino hapesiren lart titullit */
+  margin-top: 0; 
   margin-bottom: 10px;
   font-size: px;
 }
@@ -412,13 +416,238 @@ canvas {
 
 /*pjesa e modaleve me ngjyra */
 .modal-bfs {
-  background-color: #fdf5e6; /* blu e lehte, perafersisht #88bedb */
+  background-color: #fdf5e6; 
 }
 
 .modal-dfs {
-  background-color: #e8f3e3; /* gjelbert e lehte, perafersisht #d8e5c2 */
+  background-color: #e8f3e3; 
 }
 
 .modal-astar {
-  background-color: #fdf5e6; /* portokalli e lehte, perafersisht #f8dea6 */
+  background-color: #fdf5e6; 
+}
+
+
+
+
+
+/* Toggle Night Mode mini */
+.mode-switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 20px;
+}
+
+.mode-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mode-slider {
+  background: linear-gradient(to right, #f9f9f9, #add8e6);
+  border-radius: 34px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: background 0.4s ease-in-out;
+}
+
+.toggle-circle {
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  top: 50%;
+  left: 3px;
+  transform: translateY(-50%);
+  background-color: #fff;
+  border-radius: 50%;
+  background-image: url('https://em-content.zobj.net/source/telegram/358/sun_2600-fe0f.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition: left 0.4s ease-in-out, background-image 0.4s ease-in-out;
+}
+
+
+.mode-switch input:checked + .mode-slider .toggle-circle {
+  left: 21px; 
+  background-image: url('https://em-content.zobj.net/source/telegram/358/new-moon-face_1f31a.png');
+}
+
+
+body.dark-mode {
+  background-color: #202124;
+  color: #f5f5f5;
+}
+
+body.dark-mode .container {
+  background-color: #292a2d;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .title {
+  color: #ecdfc3;
+}
+
+/* Butonat lart & poshte */
+body.dark-mode .controls-top > *,
+body.dark-mode .controls-bottom button {
+  background-color: #2a2a2a;
+  color: #ecdfc3;
+}
+
+body.dark-mode .controls-bottom button:hover {
+  background-color: #333;
+  color: #ecdfc3;
+}
+
+/* Dropdowns */
+body.dark-mode .dropdown-selected {
+  background-color: #43553d;
+  border: 1px solid #555;
+  color: #ecdfc3;
+}
+
+body.dark-mode .dropdown-selected-2 {
+  background-color: #907040;
+  border: 1px solid #725b36;
+  color: #ecdfc3;
+}
+
+
+body.dark-mode .dropdown-options {
+  background-color: #222;
+  border: 1px solid #555;
+}
+
+body.dark-mode .dropdown-options div {
+  color: #ecdfc3;
+}
+
+body.dark-mode .dropdown-options div:hover {
+  background-color: #444;
+}
+
+/* Box per zgjedhjen e algoritmeve */
+body.dark-mode .generation-box {
+  background-color: #43553d;
+  border: 2px solid #677d60; 
+}
+
+body.dark-mode .generation-box-2 {
+  background-color: #907040;
+  border: 2px solid #b79159;
+}
+
+/* Butona specifik */
+body.dark-mode .generate-btn {
+  background-color: #3d6884;
+  border: 1px solid #272d2d;
+  color: #ecdfc3;
+}
+
+/*body.dark-mode .generate-btn:hover {
+  background-color: #3d627e;
+}
+*/
+
+
+body.dark-mode .info-btn {
+  transition: none;
+}
+
+body.dark-mode .info-btn:hover {
+  background-color: #3a3a3a;
+}
+
+/* Modalet */
+body.dark-mode .modal-content {
+  background-color: #1e1e1e;
+  color: #ecdfc3;
+}
+
+/* Modalet per BFS, DFS, A* */
+body.dark-mode .modal-bfs {
+  background-color: #1c2e36;
+}
+body.dark-mode .modal-dfs {
+  background-color: #28352b;
+}
+body.dark-mode .modal-astar {
+  background-color: #3b2e21;
+}
+
+/* Link algoritmesh */
+body.dark-mode .algo-link {
+  color: #6ab0de;
+}
+
+body.dark-mode .algo-link:hover {
+  color: #9fd2ef;
+}
+
+/* Toggle text */
+body.dark-mode .mode-text {
+  color: #ecdfc3;
+}
+
+
+
+
+
+.title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+
+.mode-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: -12.6px;
+}
+
+
+
+.mode-text {
+  font-size: 13px;
+  color: #3a2f25;
+}
+
+
+
+
+.info-title {
+  color: #3a2f25;
+}
+
+body.dark-mode .info-title {
+  color: #ecdfc3; 
+}
+
+body.dark-mode .bold-label {
+  color: #ecdfc3; 
+}
+
+body.dark-mode .mode-slider {
+  background: #1b2022 !important;
+  border: 1px solid #555;
+}
+
+
+.app-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
 }

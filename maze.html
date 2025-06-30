@@ -3,13 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <title>Maze Solver</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="photos/mz12.jpg" class="app-icon" />
 </head>
 <body>
+
   <div class="container">
     <!-- === PJESA MAZE + BUTONA === -->
     <div id="mainContent">
+      <div class="title-bar">
       <h1 class="title">Maze Solver</h1>
+
+        <div class="mode-toggle-wrapper">
+          <span id="modeText" class="mode-text">Light mode</span>
+            <label class="mode-switch">
+            <input type="checkbox" id="themeToggle" />
+              <span class="mode-slider">
+              <span class="toggle-circle"></span>
+              </span>
+            </label>
+        </div>
+      </div>
 
       <div class="controls controls-top">
         <div class="generation-box">
@@ -37,7 +51,7 @@
           </div>
         </div>
       </div>
-<!-- === === -->
+
       <canvas id="maze" width="500" height="500"></canvas>
 
       <div class="controls controls-bottom">
@@ -50,17 +64,17 @@
     <!-- === PJESA INFO (MODAL) === -->
     <div id="infoSection">
       <span id="infoClose">&times;</span>
-      <h2 style="color: black;">Rreth aplikacionit</h2>
-      <p>
+      <h2 class="info-title">Rreth aplikacionit</h2>
+      <p class="info-title">
         Ky aplikacion lejon përdoruesin të krijojë dhe zgjidhë labirinte duke përdorur algoritme si BFS(Breadth-First Search), DFS(Depth-First Search) dhe A*(A-star).<br>
         Qëllimi është të demonstrohet mënyra se si këto algoritme eksplorojnë hapësirën për të gjetur rrugën më të shkurtër në një mënyrë vizuale dhe ndërvepruese.
       </p>
 
-      <h3 style="margin-top: 10px; font-size: 15px; color: black; ">
+      <h3 class="info-title" style="margin-top: 10px; font-size: 15px; ">
          Si luhet loja:
       </h3>
 
-      <p style="text-align: left; max-width: 400px; margin-top: -6px;">
+      <p class="info-title" style="text-align: left; max-width: 400px; margin-top: -6px;">
         1. Së pari, zgjedh një algoritëm për gjenerimin e labirintit nga menuja <strong style="color: #85a96b;">Maze generation</strong>.<br>
         2. Pastaj, klikon butonin <strong style="color:#5ca3c8;">Generate Maze</strong> për ta ndërtuar labirintin në mënyrë automatike.<br>
         3. Pasi të krijohet labirinti, klikon në një qelizë për të vendosur pozicionin e fillimit (🐶), pastaj klikon në një qelizë tjetër për të vendosur pozicionin e qëllimit (🏠).<br>
@@ -69,7 +83,7 @@
         6. Mund të klikosh <strong style="color: #dec184;">🔄 Reset</strong> për ta filluar lojën nga e para në çdo moment.
       </p>
 
-      <p style="margin-top: 40px;">
+      <p class="info-title" style="margin-top: 40px;">
         Dëshiron të mësosh më shumë për algoritmet? Kliko në emrin e algoritmeve: 
         <span id="openBfsModal" class="algo-link bfs-link">BFS</span>, 
         <span id="openDfsModal" class="algo-link dfs-link">DFS</span> apo
@@ -82,21 +96,29 @@
       <div class="modal-content modal-bfs">
         <span class="close" id="closeBfsModal">&times;</span>
         <h2>Algoritmi BFS(Breadth-First Search)?</h2>
-        <p style="text-align: left;">
-          <strong>BFS (Kërkimi në gjerësi)</strong> është një algoritëm që eksploron labirintin duke filluar nga qeliza e parë dhe duke u zgjeruar në të gjitha drejtimet njëkohësisht, sikur të krijonte një valë që përhapet.<br><br>
-          Ai përdor një radhë (queue) për të ruajtur qelizat që duhet të eksplorohen, dhe gjithmonë zgjedh qelizën më afër fillimit për ta eksploruar më tej.<br><br>
-          <strong>Avantazhi kryesor:</strong> garanton gjithmonë rrugën më të shkurtër deri në qëllim – nëse të gjitha hapat kanë të njëjtin çmim.<br><br>
-          <strong>Kur ta përdorësh:</strong> Kur dëshiron zgjidhjen më të shkurtër dhe nuk të intereson sa shpejt e gjen rrugën.
-        </p>
+        <div style="display: flex; align-items: flex-start; gap: 20px;">
+          <div style="flex: 1;">
+            <p style="text-align: left; margin-top: 0;">
+              <strong>BFS (Kërkimi në gjerësi)</strong> është një algoritëm që eksploron labirintin duke filluar nga qeliza e parë dhe duke u zgjeruar në të gjitha drejtimet njëkohësisht, sikur të krijonte një valë që përhapet.<br><br>
+              Ai përdor një radhë (queue) për të ruajtur qelizat që duhet të eksplorohen, dhe gjithmonë zgjedh qelizën më afër fillimit për ta eksploruar më tej.<br><br>
+              <strong>Avantazhi kryesor:</strong> garanton gjithmonë rrugën më të shkurtër deri në qëllim – nëse të gjitha hapat kanë të njëjtin çmim.<br><br>
+              <strong>Kur ta përdorësh:</strong> Kur dëshiron zgjidhjen më të shkurtër dhe nuk të intereson sa shpejt e gjen rrugën.
+            </p>
+          </div>
+          <img src="photos/bfs.png" alt="BFS Diagram" style="width: 70%; max-width: 250px; border-radius: 10px; margin: 12px 0 12px auto; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: block;">
+        </div>
       </div>
     </div>
+
 
     <!-- === MODAL DFS === -->
     <div id="dfsModal" class="modal">
       <div class="modal-content modal-dfs">
         <span class="close" id="closeDfsModal">&times;</span>
         <h2>Algoritmi DFS(Depth-First Search)</h2>
-        <p style="text-align: left;">
+        <div style="display: flex; align-items: flex-start; gap: 20px;">
+          <div style="flex: 1;">
+            <p style="text-align: left; margin-top: 0;">
           <strong>DFS (Kërkimi në thellësi)</strong> eksploron sa më thellë në një drejtim para se të kthehet pas për të provuar drejtime të tjera. Është si dikush që futet në një tunel pa kthim derisa has mur, pastaj kthehet dhe provon tunelin tjetër.<br><br>
           Përdor një pirg (stack) për te lëvizur sa më thellë të jetë e mundur në një drejtim përpara se të kthehet mbrapa. <br><br>
           <strong>Avantazhi kryesor:</strong> është shumë i thjeshtë dhe i shpejtë për implementim. <br><br>
@@ -104,6 +126,9 @@
           <strong>Kur ta përdorësh:</strong> Kur shpejtësia është më e rëndësishme se rruga më e mirë, ose kur eksplorimi i thellë ka më shumë vlerë. 
         </p>
       </div>
+      <img src="photos/dfs.jpg" alt="BFS Diagram" style="width: 70%; max-width: 250px; border-radius: 10px; margin: 12px 0 12px auto; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: block;">
+    </div>
+    </div>
     </div>
 
     <!-- === MODAL A* === -->
@@ -111,20 +136,21 @@
       <div class="modal-content modal-astar">
         <span class="close" id="closeAstarModal">&times;</span>
         <h2>Algoritmi A*(A-star)</h2>
-        <p style="text-align: left;">
+        <img src="photos/a-star.png" alt="A* Diagram" style="width: 100%; max-width: 380px; height: auto; border-radius: 12px; margin: 16px auto; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: block;">
+        <p style="text-align: left; margin-top: 20px;">
           <strong>A*</strong> është një nga algoritmet më të zgjuar për gjetjen e rrugës më të mirë nga pika A në pikën B duke përdorur një funksion heuristik.<br><br>
           Përdor formulën <strong>F = G + H</strong>, ku:<br>
           <strong>• G –</strong> është distanca e përshkuar deri te qeliza aktuale<br>
           <strong>• H –</strong> është një vlerësim (heuristikë) i distancës së mbetur deri në qëllim.<br><br>
           <strong>Avantazhi kryesor:</strong> është më efektiv sesa <strong>BFS</strong> apo <strong>DFS</strong>, ku gjetja e rrugës më të shkurtër dhe më optimale ka rëndësi të madhe.<br><br>
           <strong>Kur ta përdorësh:</strong> Kur dëshiron efikasitet të lartë dhe rrugën më optimale drejt qëllimit.
-</p>
         </p>
       </div>
     </div>
-  </div>
 
-  <script src="maze.js"></script>
+
+
+  <script src="js/maze.js"></script>
   <script>
     const mainContent = document.getElementById("mainContent");
     const infoSection = document.getElementById("infoSection");
@@ -159,5 +185,11 @@
       if (event.target === astarModal) astarModal.style.display = "none";
     };
   </script>
+
+  <script src="js/generation-algorithms/dfsGeneration.js"></script>
+  <script src="js/generation-algorithms/primGeneration.js"></script>
+  <script src="js/solver-algorithms/bfsSolver.js"></script>
+  <script src="js/solver-algorithms/dfsSolver.js"></script>
+  <script src="js/solver-algorithms/aSolver.js"></script>
 </body>
 </html>
